@@ -84,4 +84,14 @@ class Bug
     {
         return $this->reporter;
     }
+
+    public function assignToProduct(Product $product): void
+    {
+        $this->products[] = $product;
+    }
+
+    public function getProducts()
+    {
+        return $this->products;
+    }
 }
