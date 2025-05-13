@@ -1,5 +1,6 @@
 <?php
 // src/Bug.php
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,6 +23,19 @@ class Bug
 
     #[ORM\Column(type: "string")]
     private string $status;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "assignedBugs")]
+    private User|null $engineer = null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "reportedBugs")]
+    private User|null $reporter;
+
+    #[ORM\ManyToMany(targetEntity: Product::class)]
+    private $products;
+
+    public function __construct()
+    {
+        $this->products = new ArrayCollection();
+    }
 
     public function getId(): int|null
     {
@@ -52,15 +66,6 @@ class Bug
         return $this->status;
     }
 
-    private $products;
-
-    public function __construct()
-    {
-        $this->products = new ArrayCollection();
-    }
-
-    private User $engineer;
-    private User $reporter;
     public function setEngineer(User $engineer): void
     {
         $engineer->assignedToBug($this);
